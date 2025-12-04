@@ -1,4 +1,36 @@
-const players = [
+const express = require("express");
+const router = express.Router();
+const pool = require("./db");
+
+router.get("/", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM players ORDER BY id ASC");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+router.post("/", async (req, res) => {
+  const { name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO players (name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+module.exports = router;
+
+
+/*const players = [
   {
     id: 1,
     name: "Jason",
@@ -144,4 +176,4 @@ const players = [
   },
 ];
 
-module.exports = players;
+module.exports = players; */
