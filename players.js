@@ -13,12 +13,14 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link } = req.body;
+  const { name, kills, deaths, assists, wins, looses, roundsPlayed, avatar, profileLink } = req.body;
+
   try {
     const result = await pool.query(
-      `INSERT INTO players (name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link)
+      `INSERT INTO players 
+       (name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
-      [name, kills, deaths, assists, wins, looses, rounds_played, avatar, profile_link]
+      [name, kills, deaths, assists, wins, looses, roundsPlayed, avatar, profileLink]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -26,6 +28,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+
 
 module.exports = router;
 
