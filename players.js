@@ -18,6 +18,24 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: "Player deleted" });
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedPlayer = await Player.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true } 
+    );
+
+    if (!updatedPlayer) {
+      return res.status(404).json({ error: "Player not found" });
+    }
+
+    res.json(updatedPlayer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 module.exports = router;
 
 
