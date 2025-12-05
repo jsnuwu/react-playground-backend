@@ -1,5 +1,29 @@
 const express = require("express");
 const router = express.Router();
+const Player = require("./models/Player");
+
+router.get("/", async (req, res) => {
+  const players = await Player.find();
+  res.json(players);
+});
+
+router.post("/", async (req, res) => {
+  const player = new Player(req.body);
+  await player.save();
+  res.json(player);
+});
+
+router.delete("/:id", async (req, res) => {
+  await Player.findByIdAndDelete(req.params.id);
+  res.json({ message: "Player deleted" });
+});
+
+module.exports = router;
+
+
+
+/*const express = require("express");
+const router = express.Router();
 const pool = require("./db");
 
 router.get("/", async (req, res) => {
